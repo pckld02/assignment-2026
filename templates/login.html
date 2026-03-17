@@ -37,6 +37,7 @@
                 <button type="submit">Login</button>
 
                 <p class="register-text">Don’t have an account? <a href="/register">Register here</a>.</p>
+                {% if error %}<p class="error-text">Incorrect Password</p>{% endif %}
 
             </form>
 

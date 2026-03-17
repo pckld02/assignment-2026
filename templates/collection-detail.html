@@ -49,7 +49,7 @@
                 {% endif %}
             </div>
             <div class="playlist-meta">
-                <p class="playlist-type">Collection</p>
+                <p class="playlist-type">Collection by <a style="text-decoration: none;" href="/user?uid={{ collection['user_id'] }}">{{ collection['username'] }}</a></p>
                 <h2 class="playlist-title">{{ collection['name'] }}</h2>
                 <div class="subtitle-row">
                     <p class="playlist-subtitle">{{ userdiscs|length }} discs</p>
@@ -63,6 +63,21 @@
                             <button form="edit-c" class="btn btn-sm" type="submit">Edit Collection</button>
                         </div>
                     {% endif %}
+                    <!-- determine whether the user has liked the collection -->
+                    {% if user['id'] in userlikes %}
+                        <form id="unlike-c" type="hidden" class="like-form">
+                            <input type="hidden" name="cid" value="{{ collection['id'] }}">
+                            <input type="hidden" name="action" value="unlike">                            
+                            <button type="submit" class="heart-icon liked" title="Unlike collection">♥</button>
+                        </form>
+                    {% else %}
+                        <form id="like-c" type="hidden" class="like-form">
+                            <input type="hidden" name="cid" value="{{ collection['id'] }}">
+                            <input type="hidden" name="action" value="like">                            
+                            <button type="submit" class="heart-icon" title="Like collection">♡</button>
+                        </form>
+                    {% endif %}
+                    <div class="numlikes">{{ userlikes|length }}</div>
                 </div>
 
         </section>

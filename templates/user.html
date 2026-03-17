@@ -474,20 +474,17 @@
                 <h3>Statistics</h3>
                 <div class="stat-item">
                     <span class="stat-label">Total Discs</span>
-                    <span class="stat-value">{{ total_discs | default(0) }}</span>
+                    <span class="stat-value">{{ userdiscs | length }}</span>
                 </div>
                 <div class="stat-item">
                     <span class="stat-label">Collections</span>
-                    <span class="stat-value">{{ total_collections | default(0) }}</span>
+                    <span class="stat-value">{{ items | length }}</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">Brands Collected</span>
-                    <span class="stat-value">{{ unique_brands | default(0) }}</span>
+                    <span class="stat-label">Collection likes</span>
+                    <span class="stat-value">{{ collection_likes | length }}</span>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-label">Average Capacity</span>
-                    <span class="stat-value">{{ avg_capacity | default('N/A') }}</span>
-                </div>
+
             </div>
 
             <!-- Account Settings Card -->

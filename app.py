@@ -124,7 +124,7 @@ def get_collection_details(cid):
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT c.id, c.name, c.discs, u.username
+        SELECT c.id, c.user_id, c.name, c.discs, u.username
         FROM collections c
         LEFT JOIN users u ON u.id = c.user_id
         WHERE c.id = ?
@@ -135,6 +135,7 @@ def get_collection_details(cid):
     if not collection:
         return {
         'id': 'null',
+        'user_id': 'null',
         'name': 'null',
         'username': 'Unknown',
         'discs': 'null'
@@ -142,6 +143,7 @@ def get_collection_details(cid):
 
     return {
         'id': collection['id'],
+        'user_id': collection['user_id'],
         'name': collection['name'],
         'username': collection['username'] or 'Unknown',
         'discs': get_collection_discs(cid)
@@ -483,10 +485,10 @@ def user():
     #viewing another users profile
     if user and getuserdetails(user)['public'] == 1:
         userdiscs, images = get_user_discs(user)
-
+        items=get_user_collections(user)
         print(get_user_discs(session['user_id']))
 
-        return render_template('user.html', user=getuserdetails(user), pfp="../static/images/profile-pictures/"+getuserprofilepicture(user), userdiscs=userdiscs, images=images)
+        return render_template('user.html', user=getuserdetails(user), pfp="../static/images/profile-pictures/"+getuserprofilepicture(user), userdiscs=userdiscs, images=images, items=items)
     
     #viewing another users profile that is private
     elif user and getuserdetails(user)['public'] == 0: return render_template('private-profile.html', user=getuserdetails(), message=0)
@@ -508,6 +510,37 @@ def collections():
     cid = request.args.get('cid')
     remove_disc = request.args.get('remove_disc')
     print(f"Action: {action}, Collection ID: {cid}, Remove Disc ID: {remove_disc}"+"\n\n\n")
+
+    #handle liking and unliking collections
+    # likes colum will contain the uid of all users that have liked the collection, separated by commas. This is not ideal but it works for now and avoids needing to create a whole new table for collection likes
+    if action == "like" and cid:
+        conn = get_db_connection(database='users.db')
+        cur = conn.cursor()
+        cur.execute("SELECT likes FROM collections WHERE id = ?", (cid,))
+        result = cur.fetchone()
+        existing_like = [int(x) for x in result['likes'].split(',') if x] if result and result['likes'] else []
+        print(f"Existing likes for collection {cid}: {existing_like}"+"\n\n\n")
+
+        if not session['user_id'] in existing_like:
+            existing_like.append(session['user_id'])
+            cur.execute("UPDATE collections SET likes = ? WHERE id = ?", (','.join(map(str, existing_like)), cid))
+            conn.commit()
+        conn.close()
+        return redirect(f'/collections?cid={cid}')
+    if action == "unlike" and cid:
+        conn = get_db_connection(database='users.db')
+        cur = conn.cursor()
+        cur.execute("SELECT likes FROM collections WHERE id = ?", (cid,))
+        result = cur.fetchone()
+        existing_like = [int(x) for x in result['likes'].split(',') if x] if result and result['likes'] else []
+        print(f"Existing likes for collection {cid}: {existing_like}"+"\n\n\n")
+
+        if session['user_id'] in existing_like:
+            existing_like.remove(session['user_id'])
+            cur.execute("UPDATE collections SET likes = ? WHERE id = ?", (','.join(map(str, existing_like)), cid))
+            conn.commit()
+        conn.close()
+        return redirect(f'/collections?cid={cid}')
 
     #private collection
     if cid and check_collection_publicity(cid) == False and get_collection_details(cid)['username'] != session['username']:
@@ -547,7 +580,7 @@ def collections():
                 return render_template('collection-detail.html', user=getuserdetails(), collection=collection, userdiscs=userdiscs, images=imageindex)
            
         else:
-            return render_template('collection-detail.html', user=getuserdetails(), collection=collection, userdiscs=userdiscs, images=imageindex)
+            return render_template('collection-detail.html', user=getuserdetails(), collection=collection, userdiscs=userdiscs, images=imageindex, userlikes=get_collection_likes(cid))
 
     #action for new collection
     if action == "newcollection":
@@ -555,6 +588,20 @@ def collections():
 
     
     return render_template('collections.html', user=getuserdetails())
+
+def get_collection_likes(cid):
+    conn = get_db_connection(database='users.db')
+    cur = conn.cursor()
+    cur.execute("SELECT likes FROM collections WHERE id = ?", (cid,))
+    likes_text = cur.fetchone()['likes']
+    conn.close()
+
+    if not likes_text:
+        return []
+
+    user_ids = [int(x) for x in likes_text.split(',') if x.strip().isdigit()]
+
+    return user_ids
 
 @app.route('/create_collection', methods=['GET', 'POST'])
 def create_collection():

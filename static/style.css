@@ -860,6 +860,49 @@ form{
     align-items: center;
     padding: 10px 18px;
     gap: 12px;
+}
+
+/* Heart Icon Styling */
+.like-form {
+    display: inline-block;
+}
+
+.heart-icon {
+    background: none;
+    border: none;
+    font-size: 36px;
+    cursor: pointer;
+    color: #cccccc;
+    transition: color 0.2s ease, transform 0.2s ease;
+    padding: 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-5px);
+}
+
+.heart-icon:hover {
+    color: #ff6b6b;
+    transform: scale(1.15) translateY(-5px);
+}
+
+.heart-icon.liked {
+    color: #ff6b6b;
+}
+
+.heart-icon.liked:hover {
+    color: #ff5252;
+}
+
+.numlikes {
+    color: #9aa3b2;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 3px;
+    display: inline-flex;
+    align-items: center;
+}
     transition: background-color 0.14s ease;
 }
 

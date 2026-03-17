@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../static/style.css">
+    <title>MiniDiscDB</title>
+</head>
+<body>
+    <header>
+
+        
+        <nav>
+
+            <h1 class="h1title">MiniDiscDB</h1>
+            <a href="/" class="btn btn-ghost">Home</a>
+
+            <a href="/collections" class="btn btn-ghost">Collections</a>
+
+            <a href="/database" class="btn btn-ghost">Database</a>
+
+            {% if not user['username'] %}
+            <a href="/login" class="btn btn-primary">Login</a>
+            {% endif %}
+
+            {% if user['username'] %}
+            <a href="/user" class="btn btn-secondary">Profile</a>
+            <a href="/logout" class="btn btn-secondary logout">Logout</a>
+            {% endif %}
+        </nav>
+
+
+    </header>
+    <main class="playlist-shell">
+        <section class="playlist-hero">
+            <div class="playlist-cover">
+                {% if userdiscs|length > 3 %}
+                    <div class="playlist-cover-grid">    
+                    {% for disc in userdiscs[:4] %}
+                        <div class="collection-preview-cell">
+                            <img src="{{ images[disc['id']] }}" alt="{{ collection['name'] }} preview {{ loop.index }}" onerror="this.style.display='none'">
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% elif userdiscs|length == 1 %}
+                    <div class="collection-preview-cell">
+                        <img src="{{ images['1'] }}" alt="{{ collection['name'] }}" onerror="this.style.display='none'">
+                    </div>
+                {% else %}
+                <span>MD</span>
+                {% endif %}
+            </div>
+            <div class="playlist-meta">
+                <p class="playlist-type">Collection</p>
+                <h2 class="playlist-title">{{ collection['name'] }}</h2>
+                <div class="subtitle-row">
+                    <p class="playlist-subtitle">{{ userdiscs|length }} discs</p>
+
+                    {% if collection['username'] == user['username'] %}
+                        <div class="c-edit-btn">
+                            <form id="edit-c" type="hidden">
+                                <input type="hidden" name="cid" value="{{ collection['id'] }}">
+                                <input type="hidden" name="action" value="edit">                            
+                            </form>
+                            <button form="edit-c" class="btn btn-sm" type="submit">Edit Collection</button>
+                        </div>
+                    {% endif %}
+                </div>
+
+        </section>
+
+        <section class="playlist-panel">
+            <div class="playlist-head-row">
+                <span>#</span>
+                <span>Title</span>
+            </div>
+
+            {% for disc in userdiscs %}
+            <div class="playlist-row">
+                <div class="playlist-index">{{ loop.index }}</div>
+                <div class="playlist-track">
+                    <div class="playlist-track-art">
+                        <img src="{{ images[disc['id']] }}" alt="{{ disc['name'].replace('_',' ').title() }}">
+                    </div>
+                    <div class="playlist-track-text">
+                        <div class="playlist-track-title">{{ disc['name'].replace('_',' ').title() }}</div>
+                        <div class="playlist-track-meta">{{ disc['brand']}}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if not userdiscs %}
+            <div class="playlist-empty">No discs in this collection yet.</div>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../static/style.css">
+    <title>MiniDiscDB</title>
+</head>
+<body>
+    <header>
+
+        
+        <nav>
+
+            <h1 class="h1title">MiniDiscDB</h1>
+            <a href="/" class="btn btn-ghost">Home</a>
+
+            <a href="/collections" class="btn btn-ghost">Collections</a>
+
+            <a href="/database" class="btn btn-ghost">Database</a>
+
+            {% if not user['username'] %}
+            <a href="/login" class="btn btn-primary">Login</a>
+            {% endif %}
+
+            {% if user['username'] %}
+            <a href="/user" class="btn btn-secondary">Profile</a>
+            <a href="/logout" class="btn btn-secondary logout">Logout</a>
+            {% endif %}
+        </nav>
+
+
+    </header>
+    <main class="playlist-shell">
+        <section class="playlist-hero">
+            <div class="playlist-cover">
+                {% if userdiscs|length > 3 %}
+                    <div class="playlist-cover-grid">    
+                    {% for disc in userdiscs[:4] %}
+                        <div class="collection-preview-cell">
+                            <img src="{{ images[disc['id']] }}" alt="{{ collection['name'] }} preview {{ loop.index }}" onerror="this.style.display='none'">
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% elif userdiscs|length == 1 %}
+                    <div class="collection-preview-cell">
+                        <img src="{{ images['1'] }}" alt="{{ collection['name'] }}" onerror="this.style.display='none'">
+                    </div>
+                {% else %}
+                <span>MD</span>
+                {% endif %}
+            </div>
+            <div class="playlist-meta">
+                <p class="playlist-type">Collection</p>
+                <form id="collection-title-form" action="/collections">
+                    <input type="hidden" name="cid" value="{{ collection['id'] }}">
+                    <input type="hidden" name="action" value="edittitle">  
+                    <h2 class="playlist-title"><input id="new-collection-title" name="title" type="text" placeholder="{{ collection['name'] }}" maxlength="80"></h2>
+                </form>
+                <div class="subtitle-row">
+                    <p class="playlist-subtitle">{{ userdiscs|length }} discs</p>
+
+                    {% if collection['username'] == user['username'] %}
+                        <div class="c-edit-btn">
+                            <button form="collection-title-form" class="btn btn-sm" type="submit">Submit Changes</button>
+                        </div>
+                    {% endif %}
+                </div>
+
+        </section>
+
+        <section class="playlist-panel">
+            <div class="playlist-head-row">
+                <span>#</span>
+                <span>Title</span>
+            </div>
+
+            {% for disc in userdiscs %}
+            <div class="playlist-row">
+                <div class="playlist-index">{{ loop.index }}</div>
+                <div class="playlist-track">
+                    <div class="playlist-track-art">
+                        <img src="{{ images[disc['id']] }}" alt="{{ disc['name'].replace('_',' ').title() }}">
+                    </div>
+                    <div class="playlist-track-text">
+                        <div class="playlist-track-title">{{ disc['name'].replace('_',' ').title() }}</div>
+                        <div class="playlist-track-meta">MiniDisc</div>
+                    </div>
+
+                </div>
+                <div>
+                    <form type="hidden" id="remove-disc-{{ disc['id']}}">
+                        <input type="hidden" name="cid" value="{{ collection['id'] }}">
+                        <input type="hidden" name="action" value="edit"> 
+                        <input type="hidden" name="remove_disc" value="{{ disc['id'] }}">
+                    </form>
+                    <button id="remove-btn" class="btn btn-sm remove-btn" form="remove-disc-{{ disc['id']}}" type="submit">Remove</button>
+                </div>
+            </div>
+            {% endfor %}
+            <form id="delete-collection-form" action="/delete_collection" method="POST">
+                <input type="hidden" name="cid" value="{{ collection['id'] }}">
+            </form>
+            
+
+
+            {% if not userdiscs %}
+            <div class="playlist-empty">No discs in this collection yet.</div>
+            {% endif %}
+
+            <div style="padding-left:20px;"><button class="btn btn-sm remove-btn" type="button" onclick="confirmDelete()">Delete Collection</button></div>
+        </section>
+    </main>
+</body>
+<script>
+function confirmDelete() {
+    if (confirm("Are you sure you want to delete this collection? This action cannot be undone.")) {
+
+        form = document.getElementById('delete-collection-form');
+
+        form.submit();
+    }
+}
+</script>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../static/style.css">
+    <title>MiniDiscDB</title>
+</head>
+<body>
+    <header>
+
+        <nav>
+            <h1>MiniDiscDB</h1>
+
+            <a href="/" class="btn btn-ghost">Home</a>
+
+            <a href="/collections" class="btn btn-ghost">Collections</a>
+
+            <a href="/database" class="btn btn-ghost">Database</a>
+
+            {% if not username %}
+            <a href="/login" class="btn btn-primary">Login</a>
+            {% endif %}
+
+            {% if username %}
+            <a href="/user" class="btn btn-secondary">Profile</a>
+            <a href="/logout" class="btn btn-secondary logout">Logout</a>
+            {% endif %}
+        </nav>
+            <div class="login-feild">
+                <h1>Register</h1>
+                <form action="/register" method="POST">
+
+
+                    <input type="text" placeholder="Username" name="username" required>
+
+                    <input type="text" placeholder="Name" name="name" required>
+
+                    <input type="password"  placeholder="Password" name="password" required>
+
+                    <button type="submit">Register</button>
+
+                    <p class="register-text">Already have an account? <a href="/login">Log in here</a>.</p>
+                    {% if error %}<p class="error-text">This username is already taken</p>{% endif %}
+
+                </form>
+
+            </div>
+
+
+
+    </header>
+</body>
+</html>

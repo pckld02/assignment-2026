@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accesible Website</title>
+    <style>
+        h1 {
+            font-size: 30px;
+        }
+        p {
+            font-size: 15px;
+        }
+        .image-bottle{
+             border: 5px solid red;
+            }
+        .div-red{
+            background-color: red;
+        }
+        .sq{    
+            width: 50px;
+            height: 50px;
+            border: 2px solid black;
+        }
+        .div-green{
+            background-color: green;
+        }
+        .div-blue{
+            background-color: blue;
+        }
+        .div-yellow{
+            background-color: yellow;
+            border: 2px solid black;
+        }
+        .container {
+            display: flex;
+            align-items: center; 
+            width: 100%; 
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        img{
+            width: 600;
+            
+        }
+
+        ol {
+            padding-left: 20px;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+        #feedback-help{
+            color: red;
+            font-style: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>This is an accessible website!</h1>
+    <p>this is some accessible text</p>
+
+
+    <h2>Intruction image</h2>
+    <img alt="cut the bottom of the bottle off using scissors" src="https://cdn.tutsplus.com/cdn-cgi/image/width=1200/vector/authors/julie-felton/cutting-bottle-bottom.jpg" class="image-bottle">
+    <p>start by cutting the bobble, making sure to leave enough room inside. this is the first step of the process of something idk</p>
+   
+    <h2>Intruction Survey</h2>
+    <p>choose the blue (2) square</p>
+    <fieldset>
+        <legend>Select one square</legend>
+        <ol>
+            <li>
+                <label class="container" for="square-1">
+                    <div class="div-red sq" aria-hidden="true"></div>
+                    <input type="radio" id="square-1" name="one" value="1">
+                </label>
+            </li>
+            <li>
+                <label class="container" for="square-2">
+                    <div class="div-blue sq" aria-hidden="true"></div>
+                    <input type="radio" id="square-2" name="one" value="2">
+                </label>
+            </li>
+            <li>
+                <label class="container" for="square-3">
+                    <div class="div-green sq" aria-hidden="true"></div>
+                    <input type="radio" id="square-3" name="one" value="3">
+                </label>
+            </li>
+            <li>
+                <label class="container" for="square-4">
+                    <div class="div-yellow sq" aria-hidden="true"></div>
+                    <input type="radio" id="square-4" name="one" value="4">
+                </label>
+            </li>
+        </ol>
+    </fieldset>
+   
+    <h2>Clear text inputs</h2>
+    <label for="feedback">Describe why you selected your answer</label><br>
+    <input
+        type="text"
+        id="feedback"
+        name="feedback"
+        aria-describedby="feedback-help"
+    >
+    <p id="feedback-help">Error: this is an informative error message!.</p>
+   
+</body>
+
+
+</html>

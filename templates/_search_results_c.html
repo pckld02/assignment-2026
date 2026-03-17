@@ -1,0 +1,44 @@
+{% if items %}
+    <div class="results-grid">
+        <form type="hidden">
+        <input type="hidden" name="action" value="newcollection">
+        <button type="submit" class="tile-button-reset">
+        <div class="result-tile-wrapper">
+            <div class="result-tile new-collection-tile">
+                <div class="collection-preview-grid">
+                    <div class="collection-preview-plus">+</div>
+                </div>
+
+            </div>
+        </div>
+        </button>
+        </form>
+    {% for it in items %}
+        <form type="hidden">
+        <input type="hidden" name="cid" value="{{ it['id'] }}">
+        <button type="submit" class="tile-button-reset">
+
+        <div class="result-tile-wrapper">
+            <div class="result-tile">
+                <div class="collection-preview-grid">
+                    {% for image in it['images'][:4] %}
+                        <div class="collection-preview-cell">
+                            <img src="{{ image }}" alt="{{ it['name'] }} preview" onerror="this.style.display='none'">
+                        </div>
+                    {% endfor %}
+                    {% for _ in range(4 - (it['images']|length)) %}
+                        <div class="collection-preview-cell collection-preview-empty"></div>
+                    {% endfor %}
+                </div>
+                <div class="tile-title">{{ it['name'] }}</div>
+                <div class="tile-brand">Created by {{ it['username'] }}</div>
+            </div>
+        </div>
+
+        </button>
+        </form>
+    {% endfor %}
+    </div>
+{% else %}
+    <div class="no-results">No results</div>
+{% endif %}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../static/style.css">
+    <title>MiniDiscDB</title>
+</head>
+<body class="home-page body-home" style="filter:none">
+    <header class="home-header">
+
+        
+        <nav>
+
+            <h1 class="h1title">MiniDiscDB</h1>
+            <a href="/" class="btn btn-ghost">Home</a>
+
+            <a href="/collections" class="btn btn-ghost">Collections</a>
+
+            <a href="/database" class="btn btn-ghost">Database</a>
+
+            {% if not username %}
+            <a href="/login" class="btn btn-primary">Login</a>
+            {% endif %}
+
+            {% if username %}
+            <a href="/user" class="btn btn-secondary">Profile</a>
+            <a href="/logout" class="btn btn-secondary logout">Logout</a>
+            {% endif %}
+        </nav>
+
+
+    </header>
+
+    <section class="scroll-section">
+        <video id="scrollVideo" preload="auto" muted playsinline>
+            <source src="../static/videos/loading-bar.mp4" type="video/mp4" />
+        </video>
+        <div>cool</div>
+    </section>
+    
+</body>
+  <script src="../static/animation.js"></script>
+
+</html>

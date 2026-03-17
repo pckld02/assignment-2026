@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ disc['name'] }}</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .disc-detail-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .disc-detail-header {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .disc-images {
+            flex: 0 0 300px;
+        }
+        .disc-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .disc-image:hover {
+            transform: scale(1.05);
+        }
+        .disc-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        .disc-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .disc-brand {
+            font-size: 18px;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        .disc-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .detail-item {
+            background-color: #222;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+        }
+        .detail-label {
+            color: #aaa;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .detail-value {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .disc-notes {
+            background-color: #222;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+        .notes-label {
+            color: #aaa;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .notes-content {
+            color: #fff;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .disc-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-back {
+            background-color: #007bff;
+            color: #fff;
+            margin-bottom: 10px;
+            margin-left: 0px;
+        }
+        .btn-back:hover {
+            background-color: #0056b3;
+        }
+        @media (max-width: 768px) {
+            .disc-detail-header {
+                flex-direction: column;
+            }
+            .disc-images {
+                flex: 0 0 100%;
+            }
+            .disc-details {
+                grid-template-columns: 1fr;
+            }
+            .disc-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        
+    </header>
+    
+        <nav>
+
+            <h1 class="h1title" style="color:#fff">MiniDiscDB</h1>
+            <a href="/" class="btn btn-ghost">Home</a>
+
+            <a href="/collections" class="btn btn-ghost">Collections</a>
+
+            <a href="/database" class="btn btn-ghost">Database</a>
+
+            {% if not user['username'] %}
+            <a href="/login" class="btn btn-primary">Login</a>
+            {% endif %}
+
+            {% if user['username'] %}
+            <a href="/user" class="btn btn-secondary">Profile</a>
+            <a href="/logout" class="btn btn-secondary logout">Logout</a>
+            {% endif %}
+        </nav>
+
+    <div class="disc-detail-container">
+        <div class="disc-actions">
+            <button class="btn btn-back" onclick="history.back()">← Back</button>
+        </div>
+
+        <div class="disc-detail-header">
+            <div class="disc-images">
+                {% if images %}
+                    {% for image in images %}
+                        <img src="{{ image }}" alt="{{ disc['name'] }}" class="disc-image">
+                    {% endfor %}
+                {% else %}
+                    <div style="width: 100%; height: 300px; background-color: #333; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #aaa;">
+                        No image available
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="disc-info">
+                <div class="disc-title">{{ disc['name'].replace('_', ' ').title() }}</div>
+                <div class="disc-brand">{{ disc['brand'] }}</div>
+
+                <div class="disc-details">
+                    {% if disc['color'] %}
+                    <div class="detail-item">
+                        <div class="detail-label">Color</div>
+                        <div class="detail-value">{{ disc['color'] }}</div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if disc[capacity] %}
+                    <div class="detail-item">
+                        <div class="detail-label">Duration</div>
+                        <div class="detail-value">{{ disc[capacity] }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if disc['notes'] %}
+                <div class="disc-notes">
+                    <div class="notes-label">Description</div>
+                    <div class="notes-content">{{ disc['notes'] }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

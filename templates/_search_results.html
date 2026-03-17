@@ -1,0 +1,53 @@
+{% if items %}
+    <div class="results-grid">
+
+    {% for it in items %}
+        <div class="result-tile-wrapper result-tile" style="width:400px">
+            <a href="/disc/{{ it['id'] }}" style="text-decoration: none;">
+                <div class="tile-header">
+                    <div class="tile-icon">
+                        <img src="{{ images[it['id']] }}" alt="{{ it['name']|default(it['name']) }}" onerror="this.style.display='none'">
+                    </div>
+                    <div>
+                        <div class="tile-title">{{ it['name'].replace('_',' ').title() }}</div>
+                        <div class="tile-brand">{{ it['brand'] }}</div>
+                    </div>
+                </div>
+                {% if it['notes']|default('') %}
+                    {% if 75 > it['notes'] | length %}
+                    <div class="tile-notes" style="white-space: pre-wrap;">{{ it['notes'] }}</div>
+                    {% else %}
+                    <div class="tile-notes">{{ it['notes'] }}</div>
+                    {% endif %}
+                <div class="tile-meta">
+                    {% if it['color']|default('') %}Color: {{ it['color'] }}{% endif %}
+                    {% if it['duration']|default('') %}<span style="margin-left:8px;">Duration: {{ it['duration'] }}</span>{% endif %}
+                </div>
+                {% else %}
+                <div class="tile-notes">[no description]<br> <br> </div>
+                <div class="tile-meta">
+                    {% if it['color']|default('') %}Color: {{ it['color'] }}{% endif %}
+                    {% if it['duration']|default('') %}<span style="margin-left:8px;">Duration: {{ it['duration'] }}</span>{% endif %}
+                </div>
+                {% endif %}
+            </a>
+
+            <form action="/add-to-collection/{{ it['id'] }}" method="POST" class="add-collection-form">
+                <select name="collection_id" required>
+                    <option value="" selected disabled>Select collection</option>
+                    {% for collection in usercollections|default([]) %}
+                        <option value="{{ collection['id'] }}">{{ collection['name'] }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" {% if not usercollections|default([]) %}disabled{% endif %}>Add to collection</button>
+            </form>
+            <form action="/disc/{{ it['id'] }}" method="GET">
+                <input type="hidden" name="action" value="add">
+                <button type="submit" style="color: black; background-color: greenyellow; margin-left: 275px;">Add to my discs</button>
+            </form>
+        </div>
+    {% endfor %}
+    </div>
+{% else %}
+    <div class="no-results">No results</div>
+{% endif %}

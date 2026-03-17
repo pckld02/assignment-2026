@@ -1,0 +1,62 @@
+import requests
+from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+import urllib3
+import os
+import time
+
+# Disable SSL warnings (school network fix)
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0"
+}
+
+INPUT_FILE = "manufacturer_links.txt"
+OUTPUT_FOLDER = "brands"
+
+os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+
+# Read manufacturer URLs
+with open(INPUT_FILE, "r", encoding="utf-8") as f:
+    manufacturer_urls = [line.strip() for line in f if line.strip()]
+
+for manufacturer_url in manufacturer_urls:
+
+    # Extract brand name from URL
+    # Example: https://www.minidisc.wiki/discs/manufacturer/sony
+    brand = manufacturer_url.rstrip("/").split("/")[-2]
+    print(f"Processing brand: {brand}")
+
+    # Build START page URL
+    start_url = f"https://www.minidisc.wiki/discs/{brand}/start"
+
+    print(f"Scraping brand: {brand}")
+    print(f"  URL: {start_url}")
+
+    try:
+        response = requests.get(start_url, headers=HEADERS, verify=False)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        links = set()
+
+        # Find all <td class="col0"><a href="...">
+        for td in soup.find_all("td", class_="col0"):
+            a = td.find("a")
+            if a and a.get("href"):
+                full_url = urljoin(start_url, a["href"])
+                links.add(full_url)
+
+        # Save to brand file
+        output_file = os.path.join(OUTPUT_FOLDER, f"{brand}.txt")
+
+        with open(output_file, "w", encoding="utf-8") as f:
+            for link in sorted(links):
+                f.write(link + "\n")
+
+        print(f"  ✅ Saved {len(links)} links")
+
+        time.sleep(0.5)
+
+    except Exception as e:
+        print(f"  ❌ Error: {e}")

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../static/style.css">
+    <title>MiniDiscDB</title>
+</head>
+<body>
+    <header>
+
+        
+        <nav>
+
+            <h1 class="h1title">MiniDiscDB</h1>
+            <a href="/" class="btn btn-ghost">Home</a>
+
+            <a href="/collections" class="btn btn-ghost">Collections</a>
+
+            <a href="/database" class="btn btn-ghost">Database</a>
+
+            {% if not user['username'] %}
+            <a href="/login" class="btn btn-primary">Login</a>
+            {% endif %}
+
+            {% if user['username'] %}
+            <a href="/user" class="btn btn-secondary">Profile</a>
+            <a href="/logout" class="btn btn-secondary logout">Logout</a>
+            {% endif %}
+        </nav>
+
+
+    </header>
+    <main class="playlist-shell">
+        <section class="playlist-hero">
+            <div class="playlist-cover">
+
+                <span>MD</span>
+            </div>
+            <div class="playlist-meta">
+                <p class="playlist-type">Collection</p>
+                <form id="collection-title-form" action="/create_collection" method="POST">
+                    <h2 class="playlist-title">Private Collectin</h2>
+                </form>
+                <p class="playlist-subtitle"></p>
+            </div>
+        </section>
+
+        <section class="playlist-panel">
+            <div class="playlist-head-row">
+                <span>#</span>
+                <span>Title</span>
+            </div>
+
+
+            {% if not userdiscs %}
+            <div class="playlist-empty">This Collection is Private</div>
+            {% endif %}
+        </section>
+    </main>
+</body>
+<script>
+
+</script>
+</html>

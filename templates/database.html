@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../static/style.css">
+    <title>MiniDiscDB</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1 class="h1title">MiniDiscDB</h1>
+            <a href="/" class="btn btn-ghost">Home</a>
+
+            <a href="/collections" class="btn btn-ghost">Collections</a>
+
+            <a href="/database" class="btn btn-ghost">Database</a>
+
+            {% if not user['username'] %}
+            <a href="/login" class="btn btn-primary">Login</a>
+            {% endif %}
+
+            {% if user['username'] %}
+            <a href="/user" class="btn btn-secondary">Profile</a>
+            <a href="/logout" class="btn btn-secondary logout">Logout</a>
+            {% endif %}
+        </nav>
+    </header>
+    <div class="search-container">
+        <div class="search-header">
+            {% if srch %}
+              <input value="{{srch}}" placeholder="Search Discs by Name, Brand, Colour, or Year" class="search-input" type="text" id="databasesearchbar">
+            {% else %}
+                <input placeholder="Search Discs by Name, Brand, Colour, or Year" class="search-input" type="text" id="databasesearchbar">
+            {% endif%}
+
+            <div class="filter-by">
+                <select name="filter-by" id="primary-options">
+                    <option value="" disabled selected>Filter by…</option>
+                    <option value="Brand">Brand</option>
+                    <option value="Colour">Colour</option>
+                    <option value="Size">Size</option>
+                </select>
+                <select name="filter-by-secondary" id="secondary-options" style="display:none;">
+                    <option value="" disabled selected>Select value…</option>
+                </select>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="search-results-container">
+        <div class="search-results-header">
+            <form action="/database" method="POST">
+                <div class="sort-by"></div>
+                <div class="grid-size"></div>
+            </form>
+        </div>
+        <div id="search-results" class="search-results">
+            
+        </div>
+    </div>
+
+    <script>
+
+    const searchBox = document.getElementById("databasesearchbar");
+    const results = document.getElementById("search-results");
+
+    const primaryDropdown = document.getElementById("primary-options");
+    const secondaryDropdown = document.getElementById("secondary-options");
+
+    // Populate secondary and show it when primary is chosen
+    primaryDropdown.addEventListener("change", async () => {
+        const field = primaryDropdown.value;
+        if (!field) return;
+
+        // Clear secondary
+        secondaryDropdown.innerHTML = '<option value="" disabled selected>Select value…</option>';
+        secondaryDropdown.style.display = 'inline-block';
+
+        const res = await fetch(`/api/filter-options?field=${encodeURIComponent(field)}`);
+        const options = await res.json();
+        for (const option of options) {
+            const opt = document.createElement("option");
+            opt.value = option;
+            opt.textContent = option;
+            secondaryDropdown.appendChild(opt);
+        }
+    });
+
+    // Trigger search when secondary value is picked
+    secondaryDropdown.addEventListener("change", () => {
+        runSearch(searchBox.value.trim());
+    });
+
+    let timeout = null;
+
+    async function runSearch(q) {
+        const field = primaryDropdown.value;
+        const value = secondaryDropdown.value;
+
+        if (!q && !value) {
+            results.innerHTML = "";
+            return;
+        }
+
+        const params = new URLSearchParams();
+        if (q) params.set("q", q);
+        if (field && value) {
+            params.set("filter_field", field);
+            params.set("filter_value", value);
+        }
+
+        const res = await fetch(`/api/search-database?${params.toString()}`);
+        results.innerHTML = await res.text();
+
+        const url = new URL(window.location);
+        url.search = params.toString();
+        window.history.replaceState({}, "", url);
+    }
+
+    // typing listener with debounce
+    searchBox.addEventListener("input", () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => runSearch(searchBox.value.trim()), 300);
+    });
+
+    const query = "{{ search_query }}";
+    if (query) {
+        runSearch(query);
+    }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../static/style.css">
+    <title>User Profile - MiniDiscDB</title>
+    <style>
+        .profile-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 40px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #444;
+            border: 3px solid #007bff;
+            object-fit: cover;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            font-size: 60px;
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info h2 {
+            margin: 0 0 10px 0;
+            font-size: 32px;
+            color: #fff;
+        }
+
+        .profile-info p {
+            margin: 5px 0;
+            color: #aaa;
+            font-size: 16px;
+        }
+
+        .profile-info .member-date {
+            color: #007bff;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .profile-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .profile-card {
+            background: #1e1e1e;
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-card h3 {
+            margin: 0 0 20px 0;
+            font-size: 22px;
+            color: #fff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .stat-value {
+            color: #007bff;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .action-buttons .btn {
+            text-align: center;
+            margin: 0;
+            padding: 12px 20px;
+            width: 100%;
+        }
+
+        .collections-grid {
+            display: flex;
+            gap: 40px;
+            overflow-x: auto;
+            padding: 12px 8px 18px;
+            scroll-behavior: smooth;
+            flex-wrap: nowrap;
+            align-items: stretch;
+        }
+
+        .collection-item {
+            background: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            flex-grow: 0;
+            width: 150px;
+        }
+
+        .collection-item:hover {
+            border-color: #007bff;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .collection-item .count {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .collection-item .name {
+            color: #aaa;
+            font-size: 12px;
+            margin-top: 8px;
+            word-break: break-word;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .settings-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #2d2d2d;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .setting-label {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .setting-value {
+            color: #007bff;
+            font-size: 14px;
+        }
+
+        .visibility-badge {
+            background: #007bff;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            .profile-content {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-picture {
+                width: 120px;
+                height: 120px;
+            }
+
+            .profile-info h2 {
+                font-size: 24px;
+            }
+        }
+
+        /* Form Input Styles for Modals */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background-color: #2d2d2d;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: #1e1e1e;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid #444;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 90%;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #fff;
+            font-size: 24px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 28px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            color: #007bff;
+        }
+
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .modal-form label {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 15px 20px;
+            background: #2d2d2d;
+            border: 2px dashed #007bff;
+            border-radius: 8px;
+            text-align: center;
+            color: #007bff;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .file-input-label:hover {
+            background: #333;
+            border-color: #0056b3;
+        }
+
+        #previewImg {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin: 15px 0 0 0;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .modal-buttons button[type="submit"] {
+            background: #007bff;
+            color: #fff;
+        }
+
+        .modal-buttons button[type="submit"]:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .modal-buttons button.cancel-btn {
+            background: #6c757d;
+            color: #fff;
+        }
+
+        .modal-buttons button.cancel-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>MiniDiscDB</h1>
+
+            <a href="/" class="btn btn-ghost">Home</a>
+
+            <a href="/collections" class="btn btn-ghost">Collections</a>
+
+            <a href="/database" class="btn btn-ghost">Database</a>
+
+            {% if not user['username'] %}
+            <a href="/login" class="btn btn-primary">Login</a>
+            {% endif %}
+
+            {% if user['username'] %}
+            <a href="/user" class="btn btn-secondary">Profile</a>
+            <a href="/logout" class="btn btn-secondary logout">Logout</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="profile-container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-picture">
+                {% if pfp %}
+                    <img src="{{ pfp }}" alt="Profile Picture">
+                {% else %}
+                    <span>👤</span>
+                {% endif %}
+            </div>
+            <div class="profile-info">
+                <h2>{{ user['username'] }}</h2>
+                {% if user['email'] %}
+                <p>{{ user['email'] }}</p>
+                {% else %}
+                <p>No email</p>
+                {% endif %}
+                <p>MiniDisc Enthusiast</p>
+                <p class="member-date">Member since {{ user['join_date'] }}</p>
+            </div>
+        </div>
+
+        <!-- Profile Content Grid -->
+        <div class="profile-content">
+            <!-- Statistics Card -->
+            {% if account %}
+            <div class="profile-card">
+            {% else %}
+            <div class="profile-card full-width">
+            {% endif %}
+                <h3>Statistics</h3>
+                <div class="stat-item">
+                    <span class="stat-label">Total Discs</span>
+                    <span class="stat-value">{{ total_discs | default(0) }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Collections</span>
+                    <span class="stat-value">{{ total_collections | default(0) }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Brands Collected</span>
+                    <span class="stat-value">{{ unique_brands | default(0) }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Average Capacity</span>
+                    <span class="stat-value">{{ avg_capacity | default('N/A') }}</span>
+                </div>
+            </div>
+
+            <!-- Account Settings Card -->
+            {% if account %}
+            <div class="profile-card">
+                <h3>Account Settings</h3>
+                <div class="action-buttons">
+                    <a href="/edit-profile"><button class="btn btn-primary">Edit Account Details</button></a>
+                    <a href="/upload-picture"><button class="btn btn-secondary">Upload Picture</button></a>
+                    <a href="/change-password"><button class="btn btn-secondary">Change Password</button></a>
+
+                    <form id="delete-user-form" action="/delete-account" method="POST">
+                        <button type="submit" onclick=confirmDelete() class="btn logout">Delete Account</button>
+                    </form>
+
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Collections Overview Card -->
+            <div class="profile-card full-width">
+                {% if account %}
+                <h3>Your Collections</h3>
+                {% else %}
+                <h3>{{ user['username'] }}'s Collections</h3>
+                {% endif %}
+                {% if items %}
+                    <div class="collections-grid">
+                        {% for it in items %}
+                            <a href="/collections?cid={{ it['id'] }}">
+                            <div class="result-tile-wrapper" style="padding-right: 40px;">
+                                <div class="result-tile-u">
+                                    <div class="collection-preview-grid">
+                                        {% for image in it['images'][:4] %}
+                                            <div class="collection-preview-cell">
+                                                <img src="{{ image }}" alt="{{ it['name'] }} preview" onerror="this.style.display='none'">
+                                            </div>
+                                        {% endfor %}
+                                        {% for _ in range(4 - (it['images']|length)) %}
+                                            <div class="collection-preview-cell collection-preview-empty"></div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="tile-title">{{ it['name'] }}</div>
+                                    <div class="tile-brand">Created by {{ it['username'] }}</div>
+                                </div>
+                            </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p style="color: #aaa; text-align: center; padding: 20px;">
+                        You haven't added any discs yet. <a href="/database" style="color: #007bff;">Start exploring</a>
+                    </p>
+                {% endif %}
+            </div>
+            <div class="profile-card full-width">
+                {% if account %}
+                <h3>Your Discs</h3>
+                {% else %}
+                <h3>{{ user['username'] }}'s Discs</h3>
+                {% endif %}
+                
+                {% if userdiscs %}
+                    <div class="collections-grid">
+                        {% for it in userdiscs %}
+                            <div class="result-tile-wrapper-up">
+                                <a href="/disc/{{ it['id'] }}" class="result-tile-userprofile">
+                                    <div class="tile-header">
+                                        <div class="tile-icon user-tile-icon">
+                                            <img src="{{images[it['id']]}}" alt="{{ it['name']|default(it['name']) }}" onerror="this.style.display='none'">
+                                        </div>
+                                        <div>
+                                            <div class="tile-title">{{ it['name'].replace('_',' ').title() }}</div>
+                                            <div class="tile-brand">{{ it['brand'] }}</div>
+                                        </div>
+                                    </div>
+                                    {% if it['notes']|default('') %}
+                                    <div class="tile-notes">{{ it['notes'] }}</div>
+                                    <div class="tile-meta">
+                                        {% if it['color']|default('') %}Color: {{ it['color'] }}{% endif %}
+                                        {% if it['duration']|default('') %}<span style="margin-left:8px;">Duration: {{ it['duration'] }}</span>{% endif %}
+                                    </div>
+                                    {% else %}
+                                    <div class="tile-notes"></div>
+                                    <div class="tile-meta">
+                                        {% if it['color']|default('') %}Color: {{ it['color'] }}{% endif %}
+                                        {% if it['duration']|default('') %}<span style="margin-left:8px;">Duration: {{ it['duration'] }}</span>{% endif %}
+                                    </div>
+                                    {% endif %}
+                                </a>
+                                <form action="/disc/{{ it['id'] }}" method="GET">
+                                    <input type="hidden" name="action" value="remove">
+                                    <button class="btn" style="background-color: red;" type="submit">Remove</button>
+                                </form>
+                            </div>
+                        {% endfor %}
+                        
+                    </div>
+                {% else %}
+                    <p style="color: #aaa; text-align: center; padding: 20px;">
+                        You haven't added any discs yet. <a href="/database" style="color: #007bff;">Start exploring</a>
+                    </p>
+                {% endif %}
+            </div>
+
+
+        </div>
+    </div>
+
+    <!-- Change Picture Modal -->
+    {% if message == 1 %}
+    <div id="changePictureModal" class="modal show">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Change Profile Picture</h2>
+                <button type="button" class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form class="modal-form" id="pictureForm" enctype="multipart/form-data" action="/upload-picture" method="POST">
+                <label for="pictureFile">Select Image</label>
+                <div class="file-input-wrapper">
+                    <input type="file" id="pictureFile" name="pictureFile" accept="image/png,image/jpeg,image/gif" required>
+                    <label for="pictureFile" class="file-input-label">
+                        Click to upload or drag image here
+                        <div style="font-size: 12px; color: #aaa; margin-top: 5px;">PNG, JPG, JPEG, or GIF (Max 16 MB)</div>
+                    </label>
+                </div>
+                <img id="previewImg" style="display: none;">
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">Upload Picture</button>
+                    <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div id="changePictureModal" class="modal"></div>
+    {% endif %}
+
+    <!-- Edit Account Details Modal -->
+    {% if message == 2 %}
+    <div id="editAccountModal" class="modal show">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Account Details</h2>
+                <button type="button" class="close-btn" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form class="modal-form" id="editAccountForm" method="POST" action="/edit-profile">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input 
+                        type="text" 
+                        id="fullName" 
+                        name="name" 
+                        value="{{ user['name'] }}" 
+                        required 
+                        placeholder="Enter your full name"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        value="{{ user['email'] | default('') }}" 
+                        placeholder="Enter your email address"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="bio">Bio (Optional)</label>
+                    <textarea 
+                        id="bio" 
+                        name="bio" 
+                        rows="4" 
+                        placeholder="Tell us about yourself..."
+                        style="resize: vertical; min-height: 80px;"
+                    >{{ user['bio'] | default('') }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Profile Publicity</label>
+                    <div style="display: flex; align-items: center;">
+                        <label class="toggle-switch">
+                            {% if user['public'] == 1 %}
+                            <input id="pub-btn" name="public" type="checkbox" checked>
+                            {% else %}
+                            <input id="pub-btn" name="public" type="checkbox">
+                            {% endif %}
+                            <span class="toggle-slider"></span>
+                        </label>
+\                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <a><button type="submit" class="btn btn-primary">Save Changes</button></a>
+                    <a href="/user"><button type="button" class="cancel-btn" onclick="closeEditModal()">Cancel</button></a>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div id="editAccountModal" class="modal"></div>
+    {% endif %}
+
+    <script>
+        // Modal Functions
+        function closeModal() {
+            document.getElementById('changePictureModal').classList.remove('show');
+            const form = document.getElementById('pictureForm');
+            if (form) {
+                form.reset();
+                const preview = document.getElementById('previewImg');
+                if (preview) preview.style.display = 'none';
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('editAccountModal').classList.remove('show');
+            const form = document.getElementById('editAccountForm');
+            if (form) form.reset();
+        }
+
+        function openEditModal() {
+            document.getElementById('editAccountModal').classList.add('show');
+        }
+
+        // File preview
+        document.getElementById('pictureFile')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('previewImg');
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Drag and drop
+        const fileInput = document.getElementById('pictureFile');
+        const fileLabel = document.querySelector('.file-input-label');
+        
+        if (fileLabel) {
+            fileLabel.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileLabel.style.backgroundColor = '#333';
+                fileLabel.style.borderColor = '#0056b3';
+            });
+
+            fileLabel.addEventListener('dragleave', () => {
+                fileLabel.style.backgroundColor = '#2d2d2d';
+                fileLabel.style.borderColor = '#007bff';
+            });
+
+            fileLabel.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileLabel.style.backgroundColor = '#2d2d2d';
+                fileLabel.style.borderColor = '#007bff';
+                fileInput.files = e.dataTransfer.files;
+                fileInput.dispatchEvent(new Event('change'));
+            });
+        }
+
+        function viewCollection(collectionId) {
+            window.location.href = `/Collections?brand=${collectionId}`;
+        }
+
+        function confirmDelete() {
+        if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+
+            form = document.getElementById('delete-user-form');
+
+            form.submit();
+        }
+        }
+
+    </script>
+</body>
+</html>

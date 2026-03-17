@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../static/style.css">
+    <title>MiniDiscDB</title>
+</head>
+<body>
+    <header>
+
+        
+        <nav>
+
+            <h1 class="h1title">MiniDiscDB</h1>
+            <a href="/" class="btn btn-ghost">Home</a>
+
+            <a href="/collections" class="btn btn-ghost">Collections</a>
+
+            <a href="/database" class="btn btn-ghost">Database</a>
+
+            {% if not user['username'] %}
+            <a href="/login" class="btn btn-primary">Login</a>
+            {% endif %}
+
+            {% if user['username'] %}
+            <a href="/user" class="btn btn-secondary">Profile</a>
+            <a href="/logout" class="btn btn-secondary logout">Logout</a>
+            {% endif %}
+        </nav>
+
+
+    </header>
+
+    <div class="search-container">
+        <div class="search-header">
+              <input placeholder="Search for Collection Names or Creators" class="search-input" type="text" id="collectionssearchbar" style="flex: 1; background: transparent; border: none; color: #e6f0ff; font-size: 16px; font-weight: 600; letter-spacing: 0.3px; padding: 10px 12px; outline: none; font-family: 'Segoe UI', Tahoma, Arial, sans-serif; caret-color: #80bdff;">
+              <style>
+                 /* Placeholder color */
+                 .search-input::placeholder { color: #9aa3b2; }
+
+                 /* Selected text inside input */
+                 .search-input::selection { background: #0056b3; color: #fff; }
+                 .search-input::-moz-selection { background: #0056b3; color: #fff; }
+              </style>
+
+        </div>
+    </div>
+
+    <div class="search-results-container">
+        <div class="search-results-header">
+            <form action="/collections" method="POST">
+                <div class="sort-by"></div>
+                <div class="grid-size"></div>
+            </form>
+        </div>
+        
+        <div class="search-results" id="searchResults">
+            
+            <div class="no-results">Search for collections</div>
+        </div>
+    </div>
+    <script>
+        // tiny debounce
+        let t;
+        const input = document.getElementById('collectionssearchbar');
+        const results = document.getElementById('searchResults');
+
+        fetch(`/search-collections`)
+            .then(r => r.text())
+            .then(html => results.innerHTML = html)
+            .catch(()=> {/* optionally show error */});
+
+        input.addEventListener('input', (e) => {
+            clearTimeout(t);
+            const q = e.target.value;
+            t = setTimeout(()=> {
+            if (!q) { 
+                fetch(`/search-collections`)
+                    .then(r => r.text())
+                    .then(html => results.innerHTML = html)
+                    .catch(()=> {/* optionally show error */}); }
+            fetch(`/search-collections?q=${encodeURIComponent(q)}`)
+                .then(r => r.text())
+                .then(html => results.innerHTML = html)
+                .catch(()=> {/* optionally show error */});
+            }, 250); // 250ms debounce
+        });
+    </script>
+
+</body>
+
+</html>

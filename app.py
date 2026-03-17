@@ -471,6 +471,18 @@ def register():
     if 'user_id' in session:
         return render_template('home.html')
 
+def get_total_user_collection_likes(user_id):
+    conn = get_db_connection(database='users.db')
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT SUM(LENGTH(likes) - LENGTH(REPLACE(likes, ',', '')) + 1) AS total_likes
+        FROM collections
+        WHERE user_id = ? AND likes IS NOT NULL AND TRIM(likes) != ''
+    """, (user_id,))
+    result = cursor.fetchone()
+    conn.close()
+    return result['total_likes'] if result and result['total_likes'] else 0
+
 @app.route('/user', methods=['GET', 'POST'])
 def user():
     if not 'user_id' in session:
@@ -487,8 +499,11 @@ def user():
         userdiscs, images = get_user_discs(user)
         items=get_user_collections(user)
         print(get_user_discs(session['user_id']))
+        total_likes = get_total_user_collection_likes(user)
+        print(f"User {session['username']} has total collection likes: {total_likes}")
 
-        return render_template('user.html', user=getuserdetails(user), pfp="../static/images/profile-pictures/"+getuserprofilepicture(user), userdiscs=userdiscs, images=images, items=items)
+
+        return render_template('user.html', user=getuserdetails(user), pfp="../static/images/profile-pictures/"+getuserprofilepicture(user), userdiscs=userdiscs, images=images, items=items, total_likes=total_likes)
     
     #viewing another users profile that is private
     elif user and getuserdetails(user)['public'] == 0: return render_template('private-profile.html', user=getuserdetails(), message=0)
@@ -496,10 +511,13 @@ def user():
     #viewing own profile
     else:
         userdiscs, images = get_user_discs(session['user_id'])
+        user=getuserdetails()
+        total_likes = get_total_user_collection_likes(session['user_id'])
+        print(f"User {session['username']} has total collection likes: {total_likes}")
 
         print(get_user_discs(session['user_id']))
 
-        return render_template('user.html', user=getuserdetails(), pfp="../static/images/profile-pictures/"+getuserprofilepicture(), userdiscs=userdiscs, images=images, account=1 , items=get_user_collections(session['user_id']))
+        return render_template('user.html', user=getuserdetails(), pfp="../static/images/profile-pictures/"+getuserprofilepicture(), userdiscs=userdiscs, images=images, account=1 , items=get_user_collections(session['user_id']), total_likes=total_likes)
 
 @app.route('/collections')
 def collections():

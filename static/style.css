@@ -902,9 +902,10 @@ form{
     margin-left: 3px;
     display: inline-flex;
     align-items: center;
-}
     transition: background-color 0.14s ease;
+
 }
+
 
 .playlist-index {
     flex: 0 0 40px;

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
     <link rel="stylesheet" href="../static/style.css">
     <title>MiniDiscDB</title>
 </head>
@@ -36,8 +37,13 @@
         </video>
         <div>cool</div>
     </section>
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/static/service-worker.js');
+    }
+    </script>
     
 </body>
-  <script src="../static/animation.js"></script>
+    <script src="../static/animation.js"></script>
 
 </html>

@@ -1,15 +1,23 @@
-const video = document.getElementById("scrollVideo");
+// Scroll-based Video Playback
+document.addEventListener("DOMContentLoaded", function() {
+  const video = document.getElementById("scrollVideo");
+  
+  if (video) {
+    video.addEventListener("loadedmetadata", () => {
+      const duration = video.duration;
 
-video?.addEventListener("loadedmetadata", () => {
-  const duration = video.duration;
-
-  window.addEventListener("scroll", () => {
-    const scrollTop = window.scrollY;
-    const maxScroll = document.body.scrollHeight - window.innerHeight;
-    const scrollFraction = scrollTop / maxScroll;
-
-    video.currentTime = duration * scrollFraction;
-  });
+      window.addEventListener("scroll", () => {
+        const scrollTop = window.scrollY;
+        const maxScroll = document.body.scrollHeight - window.innerHeight;
+        
+        // Prevent division by zero
+        if (maxScroll > 0) {
+          const scrollFraction = scrollTop / maxScroll;
+          video.currentTime = duration * scrollFraction;
+        }
+      });
+    });
+  }
 });
 
 // High Contrast Mode - Site-wide

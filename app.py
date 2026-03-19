@@ -417,8 +417,8 @@ def change_password():
             return render_template('change-password.html', error='Current password is incorrect', user=getuserdetails(), account=1, pfp="../static/images/profile-pictures/"+getuserprofilepicture())
 
         # Validate new password
-        if not new_password or len(new_password) < 6:
-            return render_template('change-password.html', error='New password must be at least 6 characters long', user=getuserdetails(), account=1, pfp="../static/images/profile-pictures/"+getuserprofilepicture())
+        if not new_password or len(new_password) < 1:
+            return render_template('change-password.html', error='New password must not be empty', user=getuserdetails(), account=1, pfp="../static/images/profile-pictures/"+getuserprofilepicture())
 
         if new_password != confirm_password:
             return render_template('change-password.html', error='New passwords do not match', user=getuserdetails(), account=1, pfp="../static/images/profile-pictures/"+getuserprofilepicture())

@@ -52,7 +52,6 @@ body{
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    filter: brightness(1.1);
 }
 
 nav {
@@ -76,11 +75,161 @@ nav {
 } */
 
 .scroll-section {
-  position: relative;
-  height: 200vh;
-  top:0;
+    position: relative;
+    height: 200vh;
+    top:0;
 }
 
+.high-contrast {
+    background-image:linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),
+    url(images/render.png);
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+}
+
+.high-contrast .profile-container {
+  filter: contrast(130%) brightness(1.2);
+}
+
+/* High Contrast Styles for Common Elements */
+.high-contrast header {
+  background-color: rgb(34, 34, 34);
+  border-bottom-color: rgb(0, 0, 0);
+}
+
+.high-contrast nav {
+  background-color: rgb(12, 12, 12);
+  border-bottom-color: rgb(0, 0, 0);
+}
+
+.high-contrast header h1 {
+  color: rgb(255, 255, 255);
+}
+
+.high-contrast .btn {
+  background: rgb(0, 102, 204);
+  color: rgb(255, 255, 255);
+  border-color: rgb(0, 0, 0);
+}
+
+.high-contrast .btn-primary {
+  background: rgb(0, 102, 204);
+  color: rgb(255, 255, 255);
+}
+
+.high-contrast .btn-secondary {
+  background: rgb(102, 102, 102);
+  color: rgb(255, 255, 255);
+  border-color: rgb(0, 0, 0);
+}
+.high-contrast .logout {
+  background: rgb(204, 0, 0);
+  color: rgb(255, 255, 255);
+  border-color: rgb(0, 0, 0);
+}
+
+.high-contrast .btn-ghost {
+  background: transparent;
+  color: rgb(255, 255, 255);
+  border-color: rgb(255, 255, 255);
+}
+
+.high-contrast .profile-card {
+  background-color: rgb(13, 13, 13);
+  border-color: rgb(0, 0, 0);
+  color: rgb(0, 0, 0);
+}
+
+.high-contrast .profile-card h3 {
+  color: rgb(255, 255, 255);
+  border-bottom-color: rgb(0, 102, 204);
+}
+
+.high-contrast .stat-label {
+  color: rgb(157, 157, 157);
+}
+
+.high-contrast .stat-value {
+  color: rgb(0, 102, 204);
+}
+
+.high-contrast .search-header {
+  background-color:rgb(13, 13, 13);
+  border-color: rgb(0, 0, 0);
+}
+
+.high-contrast .search-input {
+  background: rgb(16, 16, 16);
+  border-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+}
+
+.high-contrast .filter-by select {
+  background-color: rgb(13, 13, 13);
+  color: rgb(255, 255, 255);
+  border-color: rgb(0, 0, 0);
+}
+
+.high-contrast .result-tile,
+.high-contrast .result-tile-u,
+.high-contrast .result-tile-userprofile {
+  background-color: rgb(12, 12, 12);
+  border-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+  background-image: none;
+}
+
+.high-contrast .tile-icon {
+  background-color: rgb(13, 13, 13);
+}
+
+.high-contrast .tile-title {
+  color: rgb(255, 255, 255);
+}
+
+.high-contrast .tile-brand,
+.high-contrast .tile-notes,
+.high-contrast .tile-meta {
+  color: rgb(168, 168, 168);
+}
+
+.high-contrast .modal {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.high-contrast .modal-content {
+  background-color: rgb(13, 13, 13);
+  border-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+}
+
+.high-contrast .form-group label {
+  color: rgb(0, 0, 0);
+}
+
+.high-contrast .form-group input,
+.high-contrast .form-group textarea {
+  background-color: rgb(13, 13, 13);
+  border-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+}
+
+.high-contrast .login-feild {
+  background-color: rgb(13, 13, 13);
+  border-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+}
+
+.high-contrast .login-feild label,
+.high-contrast .login-feild h1 {
+  color: rgb(255, 255, 255);
+}
+
+.high-contrast .login-feild input {
+  background-color: rgb(13, 13, 13);
+  border-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+}
 
 video {
   position: sticky;
@@ -152,6 +301,34 @@ video {
 .btn-lg { padding: 0.75rem 1.25rem; font-size: 1.125rem; }
 
 .btn-block { display: block; width: 100%; }
+
+/* High Contrast Button */
+#highcontrast-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 999;
+    padding: 12px 18px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+#highcontrast-btn:hover {
+    background: #0056b3;
+    box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+}
+
+#highcontrast-btn:active {
+    background: #004085;
+}
+
 /* Login Form Styling */
 .login-feild form {
     display: flex;
@@ -751,6 +928,16 @@ form{
     border: 1px solid #2b2b2b;
     border-radius: 14px 14px 0 0;
 }
+.high-contrast .playlist-hero {
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+    padding: 26px;
+    background:none;
+    background-color: rgb(13, 13, 13);
+    border: 1px solid #2b2b2b;
+    border-radius: 14px 14px 0 0;
+}
 
 .playlist-cover {
     width: 180px;
@@ -843,7 +1030,14 @@ form{
     border-radius: 0 0 14px 14px;
     padding: 8px 0 12px;
 }
-
+.high-contrast .playlist-panel {
+    background:none;
+    background-color: rgb(13, 13, 13);
+    border: 1px solid #2b2b2b;
+    border-top: 0;
+    border-radius: 0 0 14px 14px;
+    padding: 8px 0 12px;
+}
 .playlist-head-row {
     display: grid;
     grid-template-columns: 52px 1fr;
@@ -902,9 +1096,9 @@ form{
     margin-left: 3px;
     display: inline-flex;
     align-items: center;
-}
     transition: background-color 0.14s ease;
 }
+
 
 .playlist-index {
     flex: 0 0 40px;

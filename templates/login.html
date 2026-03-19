@@ -3,6 +3,7 @@
 <head>
     <link rel="stylesheet" href="../static/style.css">
     <title>MiniDiscDB</title>
+    <script src="../static/animation.js"></script>
 </head>
 <body>
     <header>
@@ -30,9 +31,9 @@
             <form action="/login" method="POST">
 
 
-                <input type="text" placeholder="Username" name="username" required>
+                <input alt="Username" type="text" placeholder="Username" name="username" required>
 
-                <input type="password"  placeholder="Password" name="password" required>
+                <input alt="Password" type="password"  placeholder="Password" name="password" required>
 
                 <button type="submit">Login</button>
 
@@ -44,5 +45,6 @@
         </div>
 
     </header>
+    <button id="highcontrast-btn">Toggle High Contrast</button>
 </body>
 </html>

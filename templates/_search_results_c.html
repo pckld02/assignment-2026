@@ -23,7 +23,7 @@
                 <div class="collection-preview-grid">
                     {% for image in it['images'][:4] %}
                         <div class="collection-preview-cell">
-                            <img src="{{ image }}" alt="{{ it['name'] }} preview" onerror="this.style.display='none'">
+                            <img src="{{ image }}" alt="Minidisc From Collection:{{ it['name'] }} preview" onerror="this.style.display='none'">
                         </div>
                     {% endfor %}
                     {% for _ in range(4 - (it['images']|length)) %}

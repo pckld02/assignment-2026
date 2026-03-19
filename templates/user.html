@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="../static/style.css">
+    <script src="../static/animation.js"></script>
     <title>User Profile - MiniDiscDB</title>
     <style>
         .profile-container {
@@ -417,6 +418,85 @@
             background: #5a6268;
             transform: translateY(-2px);
         }
+
+        /* High Contrast Mode - User Page */
+        .high-contrast .profile-container {
+            filter: none;
+        }
+
+        .high-contrast .profile-header {
+            background-color: rgb(20, 20, 20);
+            border-color: rgb(70, 70, 70);
+            border-width: 2px;
+            color: rgb(255, 255, 255);
+        }
+
+        .high-contrast .profile-picture {
+            background-color: rgb(50, 50, 50);
+            border-color: rgb(0, 102, 204);
+        }
+
+        .high-contrast .profile-info h2,
+        .high-contrast .profile-info p {
+            color: rgb(255, 255, 255);
+        }
+
+        .high-contrast .profile-card {
+            background-color: rgb(20, 20, 20);
+            border-color: rgb(70, 70, 70);
+            border-width: 2px;
+            color: rgb(255, 255, 255);
+        }
+
+        .high-contrast .profile-card h3 {
+            color: rgb(255, 255, 255);
+            border-bottom-color: rgb(0, 102, 204);
+        }
+
+        .high-contrast .stat-label {
+            color: rgb(180, 180, 180);
+        }
+
+        .high-contrast .stat-value {
+            color: rgb(100, 200, 255);
+        }
+
+        .high-contrast .collection-item {
+            background-color: rgb(25, 25, 25);
+            border-color: rgb(70, 70, 70);
+            border-width: 2px;
+            color: rgb(255, 255, 255);
+        }
+
+        .high-contrast .collection-item .count {
+            color: rgb(100, 200, 255);
+        }
+
+        .high-contrast .collection-item .name {
+            color: rgb(180, 180, 180);
+        }
+
+        .high-contrast .modal-content {
+            background-color: rgb(13, 13, 13);
+            border-color: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
+        }
+
+        .high-contrast .modal-header h2 {
+            color: rgb(255, 255, 255);
+            border-bottom-color: rgb(0, 102, 204);
+        }
+
+        .high-contrast .form-group label {
+            color: rgb(255, 255, 255);
+        }
+
+        .high-contrast .form-group input,
+        .high-contrast .form-group textarea {
+            background-color: rgb(25, 25, 25);
+            border-color: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
+        }
     </style>
 </head>
 <body>
@@ -446,7 +526,7 @@
         <div class="profile-header">
             <div class="profile-picture">
                 {% if pfp %}
-                    <img src="{{ pfp }}" alt="Profile Picture">
+                    <img src="{{ pfp }}" alt="{{ user['username'] }}'s Profile Picture">
                 {% else %}
                     <span>👤</span>
                 {% endif %}
@@ -520,7 +600,7 @@
                                     <div class="collection-preview-grid">
                                         {% for image in it['images'][:4] %}
                                             <div class="collection-preview-cell">
-                                                <img src="{{ image }}" alt="{{ it['name'] }} preview" onerror="this.style.display='none'">
+                                                <img src="{{ image }}" alt="Minidisc From Collection: {{ it['name'] }} preview" onerror="this.style.display='none'">
                                             </div>
                                         {% endfor %}
                                         {% for _ in range(4 - (it['images']|length)) %}
@@ -554,7 +634,7 @@
                                 <a href="/disc/{{ it['id'] }}" class="result-tile-userprofile">
                                     <div class="tile-header">
                                         <div class="tile-icon user-tile-icon">
-                                            <img src="{{images[it['id']]}}" alt="{{ it['name']|default(it['name']) }}" onerror="this.style.display='none'">
+                                            <img src="{{images[it['id']]}}" alt="Minidisc: {{ it['name']|default(it['name']) }}" onerror="this.style.display='none'">
                                         </div>
                                         <div>
                                             <div class="tile-title">{{ it['name'].replace('_',' ').title() }}</div>
@@ -590,9 +670,10 @@
                 {% endif %}
             </div>
 
-
         </div>
     </div>
+
+    <button id="highcontrast-btn">Toggle High Contrast</button>
 
     <!-- Change Picture Modal -->
     {% if message == 1 %}
@@ -677,7 +758,7 @@
                             {% endif %}
                             <span class="toggle-slider"></span>
                         </label>
-\                    </div>
+                    </div>
                 </div>
                 <div class="modal-buttons">
                     <a><button type="submit" class="btn btn-primary">Save Changes</button></a>
@@ -689,6 +770,8 @@
     {% else %}
     <div id="editAccountModal" class="modal"></div>
     {% endif %}
+    
+    
 
     <script>
         // Modal Functions

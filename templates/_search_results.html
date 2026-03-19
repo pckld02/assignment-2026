@@ -6,7 +6,7 @@
             <a href="/disc/{{ it['id'] }}" style="text-decoration: none;">
                 <div class="tile-header">
                     <div class="tile-icon">
-                        <img src="{{ images[it['id']] }}" alt="{{ it['name']|default(it['name']) }}" onerror="this.style.display='none'">
+                        <img src="{{ images[it['id']] }}" alt="Minidisc:{{ it['name']|default(it['name']) }}" onerror="this.style.display='none'">
                     </div>
                     <div>
                         <div class="tile-title">{{ it['name'].replace('_',' ').title() }}</div>

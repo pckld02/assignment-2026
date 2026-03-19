@@ -523,7 +523,7 @@
             {% endif %}
         </nav>
     </header>
-
+    <main>
     <div class="profile-container">
         <!-- Profile Header -->
         <div class="profile-header">
@@ -660,7 +660,7 @@
                                 </a>
                                 <form action="/disc/{{ it['id'] }}" method="GET">
                                     <input type="hidden" name="action" value="remove">
-                                    <button class="btn" style="background-color: red;" type="submit">Remove</button>
+                                    <button class="btn" style="background-color:#E00000;" type="submit">Remove</button>
                                 </form>
                             </div>
                         {% endfor %}
@@ -675,6 +675,7 @@
 
         </div>
     </div>
+    </main>
 
     <button id="highcontrast-btn">Toggle High Contrast</button>
 

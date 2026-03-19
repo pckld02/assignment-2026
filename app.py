@@ -400,6 +400,42 @@ def change_password():
     if not 'user_id' in session:
         return redirect('/login')
 
+    if request.method == 'POST':
+        old_password = request.form.get('old_password')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+
+        # Get current user
+        conn = get_db_connection(database='users.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT password_hash FROM users WHERE id = ?', (session['user_id'],))
+        user = cursor.fetchone()
+        conn.close()
+
+        # Validate old password
+        if not user or not check_password_hash(user['password_hash'], old_password):
+            return render_template('change-password.html', error='Current password is incorrect', user=getuserdetails(), account=1, pfp="../static/images/profile-pictures/"+getuserprofilepicture())
+
+        # Validate new password
+        if not new_password or len(new_password) < 6:
+            return render_template('change-password.html', error='New password must be at least 6 characters long', user=getuserdetails(), account=1, pfp="../static/images/profile-pictures/"+getuserprofilepicture())
+
+        if new_password != confirm_password:
+            return render_template('change-password.html', error='New passwords do not match', user=getuserdetails(), account=1, pfp="../static/images/profile-pictures/"+getuserprofilepicture())
+
+        # Update password
+        hashed_password = generate_password_hash(new_password)
+        conn = get_db_connection(database='users.db')
+        cursor = conn.cursor()
+        cursor.execute('UPDATE users SET password_hash = ? WHERE id = ?', (hashed_password, session['user_id']))
+        conn.commit()
+        conn.close()
+
+        return render_template('change-password.html', success='Password changed successfully!', user=getuserdetails(), account=1, pfp="../static/images/profile-pictures/"+getuserprofilepicture())
+
+    return render_template('change-password.html', user=getuserdetails(), account=1, pfp="../static/images/profile-pictures/"+getuserprofilepicture())
+
+
 @app.route('/upload-picture', methods=['GET', 'POST'])
 def upload_picture():
     if not 'user_id' in session:

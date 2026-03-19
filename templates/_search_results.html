@@ -33,7 +33,7 @@
             </a>
 
             <form action="/add-to-collection/{{ it['id'] }}" method="POST" class="add-collection-form">
-                <select name="collection_id" required>
+                <select aria-label="Select collection" name="collection_id" required>
                     <option value="" selected disabled>Select collection</option>
                     {% for collection in usercollections|default([]) %}
                         <option value="{{ collection['id'] }}">{{ collection['name'] }}</option>

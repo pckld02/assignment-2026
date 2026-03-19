@@ -28,6 +28,7 @@
             {% endif %}
         </nav>
     </header>
+    <main>
     <div class="search-container">
         <div class="search-header">
             {% if srch %}
@@ -37,13 +38,13 @@
             {% endif%}
 
             <div class="filter-by">
-                <select name="filter-by" id="primary-options">
+                <select aria-label="Filter by" name="filter-by" id="primary-options">
                     <option value="" disabled selected>Filter by…</option>
                     <option value="Brand">Brand</option>
                     <option value="Colour">Colour</option>
                     <option value="Size">Size</option>
                 </select>
-                <select name="filter-by-secondary" id="secondary-options" style="display:none;">
+                <select aria-label="Select value" name="filter-by-secondary" id="secondary-options" style="display:none;">
                     <option value="" disabled selected>Select value…</option>
                 </select>
             </div>
@@ -62,6 +63,7 @@
             
         </div>
     </div>
+    </main>
     <button id="highcontrast-btn">Toggle High Contrast</button>
 
 
